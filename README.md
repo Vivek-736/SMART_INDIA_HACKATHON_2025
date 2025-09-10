@@ -1,6 +1,6 @@
 # 🌱 AgroGen – Empowering Farmers with AI-Driven, Localized Crop Solutions
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-green?style=for-the-badge&logo=supabase)
 ![Clerk](https://img.shields.io/badge/Auth-Clerk-orange?style=for-the-badge)
 ![AWS](https://img.shields.io/badge/AWS-SageMaker-blue?style=for-the-badge&logo=amazonaws)
@@ -29,7 +29,7 @@
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: [Next.js 14](https://nextjs.org/), TailwindCSS  
+- **Frontend**: [Next.js 15](https://nextjs.org/), TailwindCSS  
 - **Authentication**: [Clerk](https://clerk.com/)  
 - **Machine Learning**: AWS SageMaker (Random Forest Regression)  
 - **AI Assistance**: Google Gemini API  
@@ -57,17 +57,12 @@
 
 ---
 
-## 📸 Screenshots (Coming Soon...)
-
-> Dashboard, chatbot, and analytics views will be shared after first release.
-
----
 
 ## ⚙️ Getting Started
 
 Clone the repo and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/AgroGen.git
+git clone https://github.com/Vivek-736/AgroGen.git
 cd AgroGen
 npm install
