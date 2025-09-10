@@ -67,3 +67,79 @@ git clone https://github.com/Vivek-736/AgroGen.git
 cd AgroGen
 npm install
 ```
+
+### 📋 Environment Setup
+
+Create a `.env.local` file in the root directory: 'Add the necessary environment variables'
+
+### 🏃‍♂️ Run the Development Server
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+### 🧪 Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+### 🚀 Deploy
+
+The easiest way to deploy is using [Vercel](https://vercel.com/new):
+
+```bash
+npm install -g vercel
+vercel
+```
+
+---
+
+## 📁 Project Structure
+
+```
+AgroGen/
+├── app/                    # Next.js app directory
+├── components/             # Reusable UI components
+├── lib/                    # Utility functions & configurations
+├── public/                 # Static assets
+├── styles/                 # CSS/TailwindCSS files
+└── types/                  # TypeScript type definitions
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+
+## 📞 Contact
+
+**Vivek** - [@Vivek-736](https://github.com/Vivek-736)
+
+Project Link: [https://github.com/Vivek-736/AgroGen](https://github.com/Vivek-736/AgroGen)
+
+---
+
+## 🙏 Acknowledgments
+
+- [OpenWeather API](https://openweathermap.org/api) for weather data
+- [Google Cloud Platform](https://cloud.google.com/) for AI services
+- [AWS SageMaker](https://aws.amazon.com/sagemaker/) for ML model deployment
+- [Supabase](https://supabase.com/) for database infrastructure
+- [Vercel](https://vercel.com/) for seamless deployment
