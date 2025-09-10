@@ -66,3 +66,4 @@ Clone the repo and install dependencies:
 git clone https://github.com/Vivek-736/AgroGen.git
 cd AgroGen
 npm install
+```
