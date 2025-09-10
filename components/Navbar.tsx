@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,7 +32,14 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="text-2xl">🌱</span>
+            <span className="text-2xl">
+              <Image
+                src={'/favicon.png'}
+                width={40}
+                height={40}
+                alt="AgroGen Logo"
+              />
+            </span>
             <span className="text-xl font-bold">
               <span className="text-primary">Agro</span>
               <span className="text-agro-white">Gen</span>
