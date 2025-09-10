@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,7 +11,6 @@ const Navbar = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -50,12 +50,14 @@ const Navbar = () => {
             ))}
           </div>
 
-          <Button 
-            className="text-white bg-green-600 font-semibold hover:bg-green-400 cursor-pointer px-6 py-2 rounded-2xl"
-            variant="default"
-          >
-            Get Started
-          </Button>
+          <Link href="/dashboard">
+            <Button
+              className="text-white bg-green-600 font-semibold hover:bg-green-400 cursor-pointer px-6 py-2 rounded-2xl"
+              variant="default"
+            >
+              Get Started
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
