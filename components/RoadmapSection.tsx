@@ -11,8 +11,8 @@ const RoadmapSection = () => {
     },
     {
       icon: Rocket,
-      title: "Offline Mode & Language Expansion",
-      description: "Regional language support and offline capabilities",
+      title: "Language Expansion",
+      description: "Regional language support and capabilities",
       status: "inProgress",
       label: "Next"
     },
