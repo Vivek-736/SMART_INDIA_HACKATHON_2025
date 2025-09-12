@@ -28,7 +28,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, [pathname])
 
   const isDashboard = currentPath === "/dashboard" || pathname === "/dashboard"
-  const isChat = currentPath === "/dashboard/chat" || pathname === "/dashboard/chat"
+  const isChat = currentPath.startsWith("/dashboard/chat") || pathname.startsWith("/dashboard/chat")
+  const shouldHideHeader = isChat
 
   return (
     <SidebarProvider>
@@ -85,7 +86,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             {user && (
               <div className="p-4 border-t border-gray-200">
                 <div className="flex items-center space-x-3">
-
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={user.imageUrl}
@@ -102,13 +102,15 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </SidebarFooter>
         </Sidebar>
         <div className="flex-1 flex flex-col">
-          <header className="border-b border-gray-200 bg-white">
-            <div className="max-w-6xl mx-auto py-3.5 px-6 flex justify-end items-center">
-              <div className="ml-auto pr-4">
-                <UserButton />
+          {!shouldHideHeader && (
+            <header className="border-b border-gray-200 bg-white">
+              <div className="max-w-6xl mx-auto py-3.5 px-6 flex justify-end items-center">
+                <div className="ml-auto pr-4">
+                  <UserButton />
+                </div>
               </div>
-            </div>
-          </header>
+            </header>
+          )}
           <main className="flex-1 overflow-auto p-6">
             {children}
           </main>

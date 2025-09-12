@@ -1,10 +1,12 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 
 const useReverseGeocode = () => {
   const [location, setLocation] = useState({ state: "", detailedRegion: "" })
@@ -55,8 +57,10 @@ const DashboardPage = () => {
   }
 
   const [formData, setFormData] = useState(initialFormData)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { location, getLocation } = useReverseGeocode()
+  const router = useRouter()
 
   useEffect(() => {
     if (location.detailedRegion) {
@@ -72,8 +76,9 @@ const DashboardPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    setIsLoading(true)
     try {
-      const response = await fetch("/api/predict-yield", {
+      const response = await fetch("/api/create-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,11 +90,14 @@ const DashboardPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
-      const data = await response.json()
-      console.log("Crop yield prediction response:", data)
-      setFormData(initialFormData) // Clear form after successful submission
+      const { chatId } = await response.json()
+      setFormData(initialFormData)
+
+      router.push(`/dashboard/chat/${chatId}`)
     } catch (error) {
-      console.error("Error calling crop yield API:", error)
+      console.error("Error creating chat:", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -243,12 +251,22 @@ const DashboardPage = () => {
 
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="w-full h-9 cursor-pointer bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 text-base tracking-wide hover:ring-2 hover:ring-green-200"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                Analyze Crop Data
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Analyze Crop Data
+                  </>
+                )}
               </Button>
             </form>
           </CardContent>
