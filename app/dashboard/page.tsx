@@ -6,22 +6,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, CloudRain } from 'lucide-react'
 
 const useReverseGeocode = () => {
-  const [location, setLocation] = useState({ state: "", detailedRegion: "" })
-  const [error, setError] = useState(null)
+  const [location, setLocation] = useState({ state: "", detailedRegion: "", lat: 0, lon: 0 })
+  const [error, setError] = useState<string | null>(null)
 
   const getLocation = async () => {
     try {
-      const pos = await new Promise((resolve, reject) => {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
       })
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const lat = pos.coords.latitude
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const lon = pos.coords.longitude
       const res = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&zoom=10`
@@ -34,8 +30,8 @@ const useReverseGeocode = () => {
       }, ${data.address.state || ""}, ${data.address.country || ""}`
         .replace(/, ,/g, ",")
         .replace(/,$/, "")
-      setLocation({ state, detailedRegion })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setLocation({ state, detailedRegion, lat, lon })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message)
     }
@@ -58,7 +54,7 @@ const DashboardPage = () => {
 
   const [formData, setFormData] = useState(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
-
+  const [isRainfallLoading, setIsRainfallLoading] = useState(false)
   const { location, getLocation } = useReverseGeocode()
   const router = useRouter()
 
@@ -67,6 +63,36 @@ const DashboardPage = () => {
       setFormData((prev) => ({ ...prev, state: location.detailedRegion }))
     }
   }, [location.detailedRegion])
+
+  const fetchRainfall = async () => {
+    if (!location.lat || !location.lon) return
+    setIsRainfallLoading(true)
+    try {
+      const res = await fetch(
+        `http://api.weatherapi.com/v1/history.json?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${location.lat},${location.lon}&dt=2024-01-01&end_dt=2024-12-31`
+      )
+      if (!res.ok) throw new Error("Failed to fetch rainfall data")
+      const data = await res.json()
+      const totalRainfall = data.forecast.forecastday.reduce(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (sum: number, day: any) => sum + (day.day.totalprecip_mm || 0),
+        0
+      )
+      setFormData((prev) => ({ ...prev, annualRainfall: Math.round(totalRainfall).toString() }))
+    } catch (error) {
+      console.error("Error fetching rainfall:", error)
+      setFormData((prev) => ({ ...prev, annualRainfall: "1000" }))
+    } finally {
+      setIsRainfallLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (location.lat && location.lon) {
+      fetchRainfall()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.lat, location.lon])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (field: any) => (e: any) => {
@@ -92,7 +118,6 @@ const DashboardPage = () => {
 
       const { chatId } = await response.json()
       setFormData(initialFormData)
-
       router.push(`/dashboard/chat/${chatId}`)
     } catch (error) {
       console.error("Error creating chat:", error)
@@ -127,6 +152,7 @@ const DashboardPage = () => {
                     placeholder="e.g., Rice, Wheat, Cotton"
                   />
                 </div>
+                
                 <div className="space-y-1">
                   <Label htmlFor="season" className="text-xs font-semibold text-black tracking-wide">
                     Season
@@ -182,14 +208,30 @@ const DashboardPage = () => {
                   <Label htmlFor="annualRainfall" className="text-xs font-semibold text-black tracking-wide">
                     Annual Rainfall (mm)
                   </Label>
-                  <Input
-                    id="annualRainfall"
-                    type="number"
-                    value={formData.annualRainfall}
-                    onChange={handleChange("annualRainfall")}
-                    className="h-9 border-2 border-gray-200 rounded-lg bg-white text-black placeholder-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all duration-300 hover:border-gray-300"
-                    placeholder="e.g., 1200"
-                  />
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Input
+                      id="annualRainfall"
+                      type="number"
+                      value={formData.annualRainfall}
+                      onChange={handleChange("annualRainfall")}
+                      className="flex-1 h-9 border-2 border-gray-200 rounded-lg bg-white text-black placeholder-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all duration-300 hover:border-gray-300"
+                      placeholder="e.g., 1200"
+                      disabled={isRainfallLoading}
+                    />
+                    <Button
+                      type="button"
+                      onClick={fetchRainfall}
+                      disabled={!formData.state || isRainfallLoading}
+                      className="h-9 px-3 bg-white border-2 border-black text-black rounded-lg hover:bg-black hover:text-white transition-all duration-300 font-semibold shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+                    >
+                      {isRainfallLoading ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <CloudRain className="w-4 h-4 mr-2" />
+                      )}
+                      Auto-detect Rainfall
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="area" className="text-xs font-semibold text-black tracking-wide">
