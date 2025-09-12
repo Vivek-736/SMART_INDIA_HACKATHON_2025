@@ -123,16 +123,6 @@ AgroGen/
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-
-## 📞 Contact
-
-**Vivek** - [@Vivek-736](https://github.com/Vivek-736)
-
-Project Link: [https://github.com/Vivek-736/AgroGen](https://github.com/Vivek-736/AgroGen)
 
 ---
 
