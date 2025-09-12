@@ -15,6 +15,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -35,7 +36,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className="flex h-screen bg-white w-full">
         <Sidebar className="w-64 border-r border-gray-200">
-          <SidebarContent>
+          <SidebarContent className="md:bg-none bg-white">
             <div className="p-4 flex items-center space-x-3 border-b border-gray-200">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm">
                 <Image
@@ -49,7 +50,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
               <h1 className="text-2xl font-bold text-black tracking-tight">AgroGen</h1>
             </div>
-            <SidebarGroup>
+            <SidebarGroup className="md:bg-none bg-white">
               <SidebarGroupContent>
                 <SidebarMenu className="mt-4">
                   <SidebarMenuItem>
@@ -82,7 +83,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter>
+          <SidebarFooter className="md:bg-none bg-white">
             {user && (
               <div className="p-4 border-t border-gray-200">
                 <div className="flex items-center space-x-3">
@@ -104,7 +105,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex-1 flex flex-col">
           {!shouldHideHeader && (
             <header className="border-b border-gray-200 bg-white">
-              <div className="max-w-6xl mx-auto py-3.5 px-6 flex justify-end items-center">
+              <div className="max-w-6xl mx-auto py-3.5 px-6 flex items-center">
+                <SidebarTrigger className="p-2 text-green-600 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 mr-4" />
                 <div className="ml-auto pr-4">
                   <UserButton />
                 </div>
