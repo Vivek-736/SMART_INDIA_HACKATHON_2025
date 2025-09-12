@@ -141,7 +141,6 @@ const ChatIdPage = () => {
         .eq("Chat_Id", chatId)
         .eq("userEmail", user?.primaryEmailAddress?.emailAddress)
         .single();
-
       if (error || !data) throw error;
       setMessages(data.Chat || []);
     } catch (error) {
@@ -250,7 +249,7 @@ const ChatIdPage = () => {
               <SelectTrigger className="w-[140px] border-0 bg-transparent shadow-none focus:ring-0 text-green-700 font-semibold">
                 <SelectValue placeholder="Language" />
               </SelectTrigger>
-              <SelectContent className="border-green-200">
+              <SelectContent className="border-green-200 bg-white">
                 <SelectItem
                   value="English"
                   className="focus:bg-green-50 focus:text-green-700"
