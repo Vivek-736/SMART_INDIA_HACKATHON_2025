@@ -12,19 +12,29 @@ export async function POST(request: Request) {
       );
     }
 
+    const response = await fetch('https://ashrafgalibsk-sih-crop-yield-api1.hf.space/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error('Error calling crop yield API:', error);
     return NextResponse.json({
       model: "Random Forest",
       predicted_yield: "2017.7 kg/hectare",
       total_expected_production: "20.18 tons",
       assessment: "Good yield expected"
     });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error('Error in predict-yield API:', error);
-    return NextResponse.json(
-      { error: 'Failed to process request', details: error.message },
-      { status: 500 }
-    );
   }
 }
