@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { useUser } from "@clerk/nextjs"
-import Image from "next/image"
-import { Home, MessageCircle } from "lucide-react"
-import { useRouter, usePathname } from "next/navigation"
-import { UserButton } from "@clerk/nextjs"
-import { useState, useEffect } from "react"
+import { useUser } from '@clerk/nextjs'
+import Image from 'next/image'
+import { Home, MessageCircle, User } from 'lucide-react'
+import { useRouter, usePathname } from 'next/navigation'
+import { UserButton } from '@clerk/nextjs'
+import { useState, useEffect } from 'react'
 import {
   Sidebar,
   SidebarContent,
@@ -16,21 +16,22 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar'
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUser()
   const router = useRouter()
   const pathname = usePathname()
-  const [currentPath, setCurrentPath] = useState("")
+  const [currentPath, setCurrentPath] = useState('')
 
   useEffect(() => {
     setCurrentPath(window.location.pathname)
   }, [pathname])
 
-  const isDashboard = currentPath === "/dashboard" || pathname === "/dashboard"
-  const isChat = currentPath.startsWith("/dashboard/chat") || pathname.startsWith("/dashboard/chat")
-  const shouldHideHeader = isChat
+  const isDashboard = currentPath === '/dashboard' || pathname === '/dashboard'
+  const isChat = currentPath.startsWith('/dashboard/chat') || pathname.startsWith('/dashboard/chat')
+  const isProfile = currentPath === '/dashboard/profile' || pathname === '/dashboard/profile'
+  const shouldHideHeader = isChat || isProfile
 
   return (
     <SidebarProvider>
@@ -48,18 +49,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   priority
                 />
               </div>
-              <h1 className="text-2xl font-bold text-black tracking-tight"><span className="text-green-600">Agro</span>Gen</h1>
+              <h1 className="text-2xl font-bold text-black tracking-tight">
+                <span className="text-green-600">Agro</span>Gen
+              </h1>
             </div>
             <SidebarGroup className="md:bg-none bg-white">
               <SidebarGroupContent>
                 <SidebarMenu className="mt-4">
                   <SidebarMenuItem>
-                    <button 
-                      onClick={() => router.push("/dashboard")}
+                    <button
+                      onClick={() => router.push('/dashboard')}
                       className={`w-full cursor-pointer flex items-center p-2 text-lg rounded-lg transition-colors duration-200 ${
-                        isDashboard 
-                          ? "bg-green-100 text-green-700 hover:bg-green-50" 
-                          : "text-black hover:bg-gray-100"
+                        isDashboard
+                          ? 'bg-green-100 text-green-700 hover:bg-green-50'
+                          : 'text-black hover:bg-gray-100'
                       }`}
                     >
                       <Home className="w-6 h-6 mr-4" />
@@ -67,16 +70,29 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     </button>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <button 
-                      onClick={() => router.push("/dashboard/chat")}
+                    <button
+                      onClick={() => router.push('/dashboard/chat')}
                       className={`w-full cursor-pointer flex items-center p-2 text-lg rounded-lg transition-colors duration-200 ${
-                        isChat 
-                          ? "bg-green-100 text-green-700 hover:bg-green-50"
-                          : "text-black hover:bg-gray-100"
+                        isChat
+                          ? 'bg-green-100 text-green-700 hover:bg-green-50'
+                          : 'text-black hover:bg-gray-100'
                       }`}
                     >
                       <MessageCircle className="w-6 h-6 mr-4" />
                       Chat
+                    </button>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <button
+                      onClick={() => router.push('/dashboard/profile')}
+                      className={`w-full cursor-pointer flex items-center p-2 text-lg rounded-lg transition-colors duration-200 ${
+                        isProfile
+                          ? 'bg-green-100 text-green-700 hover:bg-green-50'
+                          : 'text-black hover:bg-gray-100'
+                      }`}
+                    >
+                      <User className="w-6 h-6 mr-4" />
+                      Profile
                     </button>
                   </SidebarMenuItem>
                 </SidebarMenu>
@@ -94,7 +110,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     className="w-8 h-8 rounded-full"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-black">{user.fullName || "User"}</p>
+                    <p className="text-sm font-semibold text-black">{user.fullName || 'User'}</p>
                     <p className="text-xs text-gray-600">{user.primaryEmailAddress?.emailAddress}</p>
                   </div>
                 </div>
@@ -113,9 +129,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
             </header>
           )}
-          <main className="flex-1 overflow-auto p-6">
-            {children}
-          </main>
+          <main className="flex-1 overflow-auto p-6">{children}</main>
         </div>
       </div>
     </SidebarProvider>
