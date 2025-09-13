@@ -2,7 +2,7 @@ import heroImage from "@/public/hero.png";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen relative overflow-hidden pt-20">
+    <section className="min-h-[20vh] mb-12 relative overflow-hidden pt-20">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl float-animation"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/3 rounded-full blur-3xl float-animation" style={{animationDelay: '-2s'}}></div>
