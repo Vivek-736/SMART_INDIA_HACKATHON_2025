@@ -1,4 +1,3 @@
-// app/dashboard/profile/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,6 +17,7 @@ import {
   TrendingUp,
   Calendar,
   BarChart3,
+  Globe,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -54,6 +54,118 @@ interface WeatherData {
   weathercode: number;
 }
 
+// Language translations object
+const translations = {
+  en: {
+    recentCropAnalyses: "Recent Crop Analyses",
+    selectedAnalysisDetails: "Selected Analysis Details",
+    cropAnalysisDashboard: "Crop Analysis Dashboard",
+    weatherConditions: "Weather Conditions",
+    farmingInputs: "Farming Inputs",
+    yieldPredictionResults: "Yield Prediction Results",
+    currentMarketPrice: "Current Market Price",
+    yield: "Yield",
+    season: "Season",
+    area: "Area",
+    rainfall: "mm Rainfall",
+    fertilizer: "kg/ha Fertilizer",
+    pesticide: "kg/ha Pesticide",
+    aiModel: "AI Model",
+    predictedYield: "Predicted Yield",
+    totalProduction: "Total Production",
+    perQuintal: "per quintal in",
+    temperature: "Temperature",
+    precipitation: "Precipitation",
+    currentConditions: "Current conditions",
+    fetchingPrices: "Fetching latest prices...",
+    loadingWeather: "Loading weather data...",
+    weatherUnavailable: "Weather data temporarily unavailable",
+    joined: "Joined",
+    analyses: "Analyses"
+  },
+  hi: {
+    recentCropAnalyses: "हाल की फसल विश्लेषण",
+    selectedAnalysisDetails: "चयनित विश्लेषण विवरण",
+    cropAnalysisDashboard: "फसल विश्लेषण डैशबोर्ड",
+    weatherConditions: "मौसम की स्थिति",
+    farmingInputs: "कृषि इनपुट",
+    yieldPredictionResults: "उत्पादन पूर्वानुमान परिणाम",
+    currentMarketPrice: "वर्तमान बाज़ार मूल्य",
+    yield: "उत्पादन",
+    season: "मौसम",
+    area: "क्षेत्र",
+    rainfall: "मिमी वर्षा",
+    fertilizer: "किग्रा/हेक्टेयर उर्वरक",
+    pesticide: "किग्रा/हेक्टेयर कीटनाशक",
+    aiModel: "AI मॉडल",
+    predictedYield: "अनुमानित उत्पादन",
+    totalProduction: "कुल उत्पादन",
+    perQuintal: "प्रति क्विंटल में",
+    temperature: "तापमान",
+    precipitation: "वर्षा",
+    currentConditions: "वर्तमान स्थितियां",
+    fetchingPrices: "नवीनतम मूल्य प्राप्त कर रहे हैं...",
+    loadingWeather: "मौसम डेटा लोड हो रहा है...",
+    weatherUnavailable: "मौसम डेटा अस्थायी रूप से उपलब्ध नहीं है",
+    joined: "शामिल हुए",
+    analyses: "विश्लेषण"
+  },
+  te: {
+    recentCropAnalyses: "ఇటీవలి పంట విశ్లేషణలు",
+    selectedAnalysisDetails: "ఎంచుకున్న విశ్లేషణ వివరాలు",
+    cropAnalysisDashboard: "పంట విశ్లేషణ డాష్‌బోర్డ్",
+    weatherConditions: "వాతావరణ పరిస్థితులు",
+    farmingInputs: "వ్యవసాయ ఇన్‌పుట్‌లు",
+    yieldPredictionResults: "దిగుబడి అంచనా ఫలితాలు",
+    currentMarketPrice: "ప్రస్తుత మార్కెట్ ధర",
+    yield: "దిగుబడి",
+    season: "కాలం",
+    area: "వైశాల్యం",
+    rainfall: "మిమీ వర్షపాతం",
+    fertilizer: "కిగ్రా/హెక్టేర్ ఎరువులు",
+    pesticide: "కిగ్రా/హెక్టేర్ పురుగుమందులు",
+    aiModel: "AI మోడల్",
+    predictedYield: "అంచనా దిగుబడి",
+    totalProduction: "మొత్తం ఉత్పాదన",
+    perQuintal: "క్వింటాల్‌కు",
+    temperature: "ఉష్ణోగ్రత",
+    precipitation: "వర్షపాతం",
+    currentConditions: "ప్రస్తుత పరిస్థితులు",
+    fetchingPrices: "తాజా ధరలను పొందుతోంది...",
+    loadingWeather: "వాతావరణ డేటా లోడ్ అవుతోంది...",
+    weatherUnavailable: "వాతావరణ డేటా తాత్కాలికంగా అందుబాటులో లేదు",
+    joined: "చేరారు",
+    analyses: "విశ్లేషణలు"
+  },
+  or: {
+    recentCropAnalyses: "ସାମ୍ପ୍ରତିକ ଫସଲ ବିଶ୍ଳେଷଣ",
+    selectedAnalysisDetails: "ମନୋନୀତ ବିଶ୍ଳେଷଣ ବିବରଣୀ",
+    cropAnalysisDashboard: "ଫସଲ ବିଶ୍ଳେଷଣ ଡାସବୋର୍ଡ",
+    weatherConditions: "ପାଣିପାଗ ଅବସ୍ଥା",
+    farmingInputs: "କୃଷି ଇନପୁଟ୍",
+    yieldPredictionResults: "ଅମଳ ପୂର୍ବାନୁମାନ ଫଳାଫଳ",
+    currentMarketPrice: "ବର୍ତ୍ତମାନର ବଜାର ମୂଲ୍ୟ",
+    yield: "ଅମଳ",
+    season: "ଋତୁ",
+    area: "କ୍ଷେତ୍ର",
+    rainfall: "ମିମି ବର୍ଷା",
+    fertilizer: "କିଗ୍ରା/ହେକ୍ଟର ସାର",
+    pesticide: "କିଗ୍ରା/ହେକ୍ଟର କୀଟନାଶକ",
+    aiModel: "AI ମଡେଲ",
+    predictedYield: "ପୂର୍ବାନୁମାନିତ ଅମଳ",
+    totalProduction: "ମୋଟ ଉତ୍ପାଦନ",
+    perQuintal: "କ୍ୱିଣ୍ଟାଲ ପ୍ରତି",
+    temperature: "ତାପମାତ୍ରା",
+    precipitation: "ବର୍ଷା",
+    currentConditions: "ବର୍ତ୍ତମାନର ଅବସ୍ଥା",
+    fetchingPrices: "ନୂତନ ମୂଲ୍ୟ ଆଣୁଛି...",
+    loadingWeather: "ପାଣିପାଗ ଡାଟା ଲୋଡ୍ ହେଉଛି...",
+    weatherUnavailable: "ପାଣିପାଗ ଡାଟା ଅସ୍ଥାୟୀ ଭାବେ ଉପଲବ୍ଧ ନାହିଁ",
+    joined: "ଯୋଗ ଦେଲେ",
+    analyses: "ବିଶ୍ଳେଷଣ"
+  }
+};
+
 const ProfilePage = () => {
   const { user } = useUser();
   const [userAnalyses, setUserAnalyses] = useState<UserData[]>([]);
@@ -65,6 +177,8 @@ const ProfilePage = () => {
   const [priceLoading, setPriceLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState<'en' | 'hi' | 'te' | 'or'>('en');
+  const t = translations[currentLanguage];
 
   useEffect(() => {
     if (user) {
@@ -219,6 +333,34 @@ const ProfilePage = () => {
     return weatherCodes[code] || "Unknown";
   };
 
+  const LanguageSwitcher = () => (
+    <div className="flex items-center space-x-2 ml-4">
+      <Globe className="w-5 h-5 text-gray-600" />
+      <div className="flex space-x-1 bg-white/80 rounded-lg p-1 shadow-sm">
+        {[
+          { code: 'en', label: 'EN' },
+          { code: 'hi', label: 'हि' },
+          { code: 'te', label: 'తె' },
+          { code: 'or', label: 'ଓଡ଼' }
+        ].map(({ code, label }) => (
+          <Button
+            key={code}
+            onClick={() => setCurrentLanguage(code as 'en' | 'hi' | 'te' | 'or')}
+            variant={currentLanguage === code ? "default" : "ghost"}
+            size="sm"
+            className={`px-3 py-1 text-xs font-medium transition-all duration-200 ${
+              currentLanguage === code
+                ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+            }`}
+          >
+            {label}
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-6 md:p-8">
@@ -285,7 +427,6 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-6 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* User Profile Header */}
         <Card className="border-none shadow-2xl rounded-2xl bg-white/90 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-3xl">
           <CardHeader className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white py-8">
             <div className="flex flex-col sm:flex-row items-center space-y-6 sm:space-y-0 sm:space-x-6">
@@ -308,7 +449,7 @@ const ProfilePage = () => {
                     className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200 py-1 px-3 text-sm font-medium rounded-full transition-colors duration-200"
                   >
                     <Calendar className="w-4 h-4 mr-1" />
-                    Joined{" "}
+                    {t.joined}{" "}
                     {user?.createdAt
                       ? new Date(user.createdAt).toLocaleDateString()
                       : "Recently"}
@@ -318,7 +459,7 @@ const ProfilePage = () => {
                     className="bg-cyan-100 text-cyan-800 hover:bg-cyan-200 py-1 px-3 text-sm font-medium rounded-full transition-colors duration-200"
                   >
                     <BarChart3 className="w-4 h-4 mr-1" />
-                    {userAnalyses.length} Analyses
+                    {userAnalyses.length} {t.analyses}
                   </Badge>
                 </div>
               </div>
@@ -326,9 +467,11 @@ const ProfilePage = () => {
           </CardHeader>
         </Card>
 
-        {/* Recent Analyses Grid */}
         <div className="space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Recent Crop Analyses</h2>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{t.recentCropAnalyses}</h2>
+            <LanguageSwitcher />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {userAnalyses.map((analysis, index) => (
               <Card 
@@ -347,17 +490,17 @@ const ProfilePage = () => {
                 </CardHeader>
                 <CardContent className="p-6 space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Yield</span>
+                    <span className="text-sm text-gray-600">{t.yield}</span>
                     <span className="font-bold text-emerald-600">
                       {analysis.prediction.predicted_yield}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Season</span>
+                    <span className="text-sm text-gray-600">{t.season}</span>
                     <span className="font-medium">{analysis.formData.season}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Area</span>
+                    <span className="text-sm text-gray-600">{t.area}</span>
                     <span className="font-medium">{analysis.formData.area} ha</span>
                   </div>
                   <p className="text-sm text-gray-700 line-clamp-2">
@@ -369,17 +512,15 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Selected Analysis Details */}
         {selectedAnalysis && (
           <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Selected Analysis Details</h2>
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{t.selectedAnalysisDetails}</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Crop Analysis Card */}
               <Card className="border-none shadow-2xl rounded-2xl bg-white/90 backdrop-blur-sm transition-all duration-300 hover:shadow-3xl">
                 <CardHeader className="bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-t-2xl py-6">
                   <CardTitle className="flex items-center text-2xl font-semibold">
                     <Sprout className="w-7 h-7 mr-3" />
-                    Crop Analysis Dashboard
+                    {t.cropAnalysisDashboard}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
@@ -419,26 +560,26 @@ const ProfilePage = () => {
                   <div className="bg-gradient-to-r from-amber-50 to-yellow-50 p-6 rounded-xl border border-amber-200">
                     <h4 className="font-semibold text-gray-900 mb-4 flex items-center text-lg">
                       <Thermometer className="w-6 h-6 mr-2 text-amber-600" />
-                      Farming Inputs
+                      {t.farmingInputs}
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                       <div>
                         <p className="text-3xl font-bold text-cyan-600">
                           {selectedAnalysis.formData.annualRainfall}
                         </p>
-                        <p className="text-sm text-gray-600">mm Rainfall</p>
+                        <p className="text-sm text-gray-600">{t.rainfall}</p>
                       </div>
                       <div>
                         <p className="text-3xl font-bold text-emerald-600">
                           {selectedAnalysis.formData.fertilizer}
                         </p>
-                        <p className="text-sm text-gray-600">kg/ha Fertilizer</p>
+                        <p className="text-sm text-gray-600">{t.fertilizer}</p>
                       </div>
                       <div>
                         <p className="text-3xl font-bold text-purple-600">
                           {selectedAnalysis.formData.pesticide}
                         </p>
-                        <p className="text-sm text-gray-600">kg/ha Pesticide</p>
+                        <p className="text-sm text-gray-600">{t.pesticide}</p>
                       </div>
                     </div>
                   </div>
@@ -447,18 +588,18 @@ const ProfilePage = () => {
                   <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl border-l-4 border-emerald-500">
                     <h3 className="font-bold text-gray-900 mb-4 flex items-center text-xl">
                       <TrendingUp className="w-7 h-7 mr-2 text-emerald-600" />
-                      Yield Prediction Results
+                      {t.yieldPredictionResults}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                       <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 transition-all duration-200 hover:shadow-md">
-                        <p className="text-sm text-gray-500 mb-1">AI Model</p>
+                        <p className="text-sm text-gray-500 mb-1">{t.aiModel}</p>
                         <p className="font-bold text-sm text-gray-900">
                           {selectedAnalysis.prediction.model}
                         </p>
                       </div>
                       <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 transition-all duration-200 hover:shadow-md">
                         <p className="text-sm text-gray-500 mb-1">
-                          Predicted Yield
+                          {t.predictedYield}
                         </p>
                         <p className="font-bold text-sm text-emerald-600">
                           {selectedAnalysis.prediction.predicted_yield}
@@ -466,7 +607,7 @@ const ProfilePage = () => {
                       </div>
                       <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 transition-all duration-200 hover:shadow-md">
                         <p className="text-sm text-gray-500 mb-1">
-                          Total Production
+                          {t.totalProduction}
                         </p>
                         <p className="font-bold text-sm text-cyan-600">
                           {selectedAnalysis.prediction.total_expected_production}
@@ -484,13 +625,13 @@ const ProfilePage = () => {
                   <div className="bg-gradient-to-r from-amber-50 to-yellow-50 p-6 rounded-xl border border-amber-200">
                     <h4 className="font-semibold text-gray-900 mb-4 flex items-center text-lg">
                       <TrendingUp className="w-6 h-6 mr-2 text-amber-600" />
-                      Current Market Price
+                      {t.currentMarketPrice}
                     </h4>
                     {priceLoading ? (
                       <div className="flex items-center space-x-2">
                         <RefreshCw className="w-5 h-5 animate-spin text-amber-600" />
                         <p className="text-amber-700 text-lg">
-                          Fetching latest prices...
+                          {t.fetchingPrices}
                         </p>
                       </div>
                     ) : (
@@ -499,7 +640,7 @@ const ProfilePage = () => {
                           ₹{cropPrices[`${selectedAnalysis.formData.state}_${selectedAnalysis.formData.crop}`] || "N/A"}
                         </p>
                         <p className="text-sm text-amber-700">
-                          per quintal in {selectedAnalysis.formData.state}
+                          {t.perQuintal} {selectedAnalysis.formData.state}
                         </p>
                       </div>
                     )}
@@ -512,7 +653,7 @@ const ProfilePage = () => {
                 <CardHeader className="bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-600 text-white rounded-t-2xl py-6">
                   <CardTitle className="flex items-center text-2xl font-semibold">
                     <SunIcon className="w-7 h-7 mr-3" />
-                    Weather Conditions
+                    {t.weatherConditions}
                   </CardTitle>
                   <p className="text-cyan-100 text-lg">
                     {selectedAnalysis.formData.state || "Your Location"}
@@ -522,7 +663,7 @@ const ProfilePage = () => {
                   {weatherLoading ? (
                     <div className="text-center py-10">
                       <RefreshCw className="w-10 h-10 text-cyan-600 mx-auto mb-4 animate-spin" />
-                      <p className="text-gray-600 text-lg">Loading weather data...</p>
+                      <p className="text-gray-600 text-lg">{t.loadingWeather}</p>
                     </div>
                   ) : weathers[selectedAnalysis.formData.state] ? (
                     <div className="space-y-6">
@@ -533,7 +674,7 @@ const ProfilePage = () => {
                             {weathers[selectedAnalysis.formData.state].temperature_2m}°C
                           </p>
                           <p className="text-sm text-cyan-600 font-medium">
-                            Temperature
+                            {t.temperature}
                           </p>
                         </div>
                         <div className="bg-gradient-to-br from-teal-50 to-cyan-100 p-6 rounded-xl text-center transition-all duration-200 hover:shadow-md">
@@ -542,7 +683,7 @@ const ProfilePage = () => {
                             {weathers[selectedAnalysis.formData.state].precipitation}mm
                           </p>
                           <p className="text-sm text-teal-600 font-medium">
-                            Precipitation
+                            {t.precipitation}
                           </p>
                         </div>
                       </div>
@@ -551,7 +692,7 @@ const ProfilePage = () => {
                           {getWeatherDescription(weathers[selectedAnalysis.formData.state].weathercode)}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          Current conditions
+                          {t.currentConditions}
                         </p>
                       </div>
                     </div>
@@ -559,7 +700,7 @@ const ProfilePage = () => {
                     <div className="text-center py-10">
                       <AlertCircle className="w-14 h-14 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-500 text-lg">
-                        Weather data temporarily unavailable
+                        {t.weatherUnavailable}
                       </p>
                     </div>
                   )}
