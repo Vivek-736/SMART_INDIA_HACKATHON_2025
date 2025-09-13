@@ -41,7 +41,7 @@ const Navbar = () => {
               />
             </span>
             <span className="text-xl font-bold">
-              <span className="text-primary">Agro</span>
+              <span className="text-green-600">Agro</span>
               <span className="text-agro-white">Gen</span>
             </span>
           </div>

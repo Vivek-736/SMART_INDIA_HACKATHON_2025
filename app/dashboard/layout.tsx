@@ -48,7 +48,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                   priority
                 />
               </div>
-              <h1 className="text-2xl font-bold text-black tracking-tight">AgroGen</h1>
+              <h1 className="text-2xl font-bold text-black tracking-tight"><span className="text-green-600">Agro</span>Gen</h1>
             </div>
             <SidebarGroup className="md:bg-none bg-white">
               <SidebarGroupContent>
