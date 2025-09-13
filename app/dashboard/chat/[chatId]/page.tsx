@@ -46,6 +46,16 @@ const ChatIdPage = () => {
     }
   }
 
+  const formatMessageContent = (content: string) => {
+    let formatted = content.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-green-700">$1</strong>');
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em class="italic text-green-600">$1</em>');
+    formatted = formatted.replace(/^\* /gm, '• ');
+    formatted = formatted.replace(/\n\n/g, '<br/><br/>');
+    formatted = formatted.replace(/\n/g, '<br/>');
+    
+    return formatted;
+  };
+
   useEffect(() => {
     if (user) {
       fetchChat()
@@ -296,8 +306,16 @@ const ChatIdPage = () => {
                           <div className={`text-sm font-medium mb-2 ${msg.role === 'user' ? 'text-green-100' : 'text-green-600'}`}>
                             {msg.role === 'user' ? 'You' : 'AgroGen Assistant'}
                           </div>
-                          <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                            {msg.content}
+                          <div className="text-sm leading-relaxed">
+                            {msg.role === 'bot' ? (
+                              <div 
+                                dangerouslySetInnerHTML={{ 
+                                  __html: formatMessageContent(msg.content) 
+                                }}
+                              />
+                            ) : (
+                              <div className="whitespace-pre-wrap">{msg.content}</div>
+                            )}
                           </div>
                           {msg.role === 'bot' && (
                             <Button
