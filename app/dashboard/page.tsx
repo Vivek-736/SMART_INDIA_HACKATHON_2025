@@ -57,6 +57,7 @@ const DashboardPage = () => {
     fertilizer: "",
     pesticide: "",
     cropYear: "",
+    soilType: "",
   }
 
   const [formData, setFormData] = useState(initialFormData)
@@ -67,6 +68,7 @@ const DashboardPage = () => {
 
   const uniqueCrops = ['Cereals', 'Maize', 'Moong', 'Nutri/Coarse Cereals', 'Rice', 'Total Food Grains', 'Total Pulses', 'Tur', 'Urad', 'Arecanut', 'Arhar/Tur']
   const uniqueSeasons = ['Kharif', 'Total', 'Rabi', 'Whole Year']
+  const soilTypes = ['Sandy', 'Clay', 'Silt', 'Loam', 'Chalk', 'Peat']
 
   useEffect(() => {
     if (location.detailedRegion) {
@@ -88,7 +90,6 @@ const DashboardPage = () => {
         0
       )
       setFormData((prev) => ({ ...prev, annualRainfall: Math.round(totalRainfall).toString() }))
-      
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     } catch (error: any) {
       setFormData((prev) => ({ ...prev, annualRainfall: "1000" }))
@@ -114,12 +115,14 @@ const DashboardPage = () => {
     e.preventDefault()
     setIsLoading(true)
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { soilType, ...apiData } = formData
       const response = await fetch("/api/create-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(apiData),
       })
 
       if (!response.ok) {
@@ -241,6 +244,29 @@ const DashboardPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="soilType" className="text-sm font-medium text-gray-700 flex items-center">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                      Soil Type
+                    </Label>
+                    <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, soilType: value }))}>
+                      <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl bg-white text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-300 hover:border-gray-300">
+                        <SelectValue placeholder="Select soil type" className="text-gray-500" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-2 border-gray-100 rounded-xl shadow-lg">
+                        {soilTypes.map((soil) => (
+                          <SelectItem 
+                            key={soil} 
+                            value={soil}
+                            className="hover:bg-blue-50 focus:bg-blue-50 rounded-lg mx-1 my-0.5"
+                          >
+                            {soil}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <div className="space-y-3">
                     <Label htmlFor="annualRainfall" className="text-sm font-medium text-gray-700 flex items-center">
                       <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
