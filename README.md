@@ -133,3 +133,19 @@ AgroGen/
 - [AWS SageMaker](https://aws.amazon.com/sagemaker/) for ML model deployment
 - [Supabase](https://supabase.com/) for database infrastructure
 - [Vercel](https://vercel.com/) for seamless deployment
+## 👥 Team
+
+| Name | Role |
+|------|------|
+| Ashraf | AI Developer & Strategist |
+| Ram Charan | Full Stack & Mobile Developer |
+| Asish | Mobile Developer |
+| Yashasvini | Researcher & Pitch Deck |
+| Harshitha | Researcher & Pitch Deck |
+| Malavya | Video Editor & Demo Creation |
+
+---
+
+<div align="center">
+  <em>Made with passion by Team AgroGen 💚</em>
+</div>
