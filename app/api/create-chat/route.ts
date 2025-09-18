@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     const title = titleResult.response.text().trim().slice(0, 50);
 
     const systemPrompt = 'You are a crop yield predicting and suggesting AI. Provide helpful advice on farming, yields, and improvements.';
-    const initialPrompt = `${systemPrompt}\nBased on this crop data: ${JSON.stringify(formData)}\nAnd prediction: ${JSON.stringify(predictionData)}\nGive a succinct yield prediction and initial assessment. Ignore the Good yield prediction thing that you are getting from the data because it is not always correct. Let us say the user is not at all using pesticide and fertilizer, so give suggestions accordingly that there is a hight chance of bad yield. Also, give suggestions on how to improve the yield. Also after giving suggestions tell the user how much percent of improvement in yield can be expected if the suggestions are followed.`;
+    const initialPrompt = `${systemPrompt}\nBased on this crop data: ${JSON.stringify(formData)}\nAnd prediction: ${JSON.stringify(predictionData)}\nGive a succinct yield prediction and initial assessment. Ignore the Good yield prediction thing that you are getting from the data because it is not always correct. if you get pesticide: 0 and fertilizer: 0 then give suggestions accordingly that there is a high chance of bad yield. Also, give suggestions on how to improve the yield. Also after giving suggestions tell the user how much percent of improvement in yield can be expected if the suggestions are followed.`;
     const initialResult = await model.generateContent(initialPrompt);
     const initialMessage = initialResult.response.text().trim();
 
