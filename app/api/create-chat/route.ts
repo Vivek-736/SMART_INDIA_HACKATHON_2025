@@ -7,13 +7,11 @@ import crypto from 'crypto';
 export async function POST(request: Request) {
   try {
     const user = await currentUser();
-
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const userEmail = user.primaryEmailAddress?.emailAddress;
-
     if (!userEmail) {
       return NextResponse.json({ error: 'User email not found' }, { status: 400 });
     }
@@ -49,8 +47,47 @@ export async function POST(request: Request) {
     const titleResult = await model.generateContent(titlePrompt);
     const title = titleResult.response.text().trim().slice(0, 50);
 
-    const systemPrompt = 'You are a crop yield predicting and suggesting AI. Provide helpful advice on farming, yields, and improvements.';
-    const initialPrompt = `${systemPrompt}\nBased on this crop data: ${JSON.stringify(formData)}\nAnd prediction: ${JSON.stringify(predictionData)}\nGive a succinct yield prediction and initial assessment. Ignore the Good yield prediction thing that you are getting from the data because it is not always correct. if you get pesticide: 0 and fertilizer: 0 then give suggestions accordingly that there is a high chance of bad yield. Also, give suggestions on how to improve the yield. Also after giving suggestions tell the user how much percent of improvement in yield can be expected if the suggestions are followed.`;
+    const systemPrompt = `
+You are a crop yield prediction & suggestion AI. 
+You should do the following:
+
+1. Provide a yield prediction and assessment based on the provided data.
+2. If fertilizer or pesticide is zero / missing / negligible, mention that this can lead to poor yield.
+3. Give general suggestions for improvement (water, soil, timing, cultivation practices, etc.).
+4. Estimate a percentage improvement in yield if these suggestions are followed.
+5. **Important**: Do *not* suggest specific fertilizer or pesticide names *unless* the user explicitly asks for them. If user asks, then you *can* suggest region-appropriate fertilizers/pesticides.
+
+6. If the user requests specific names, here are **sample fertilizers and pesticides used in India for rice** that you may draw from:
+
+   **Fertilizers:**
+   - Urea (nitrogen source) :contentReference[oaicite:0]{index=0}  
+   - DAP (Diammonium Phosphate) or TSP (Triple Super Phosphate) for phosphorus :contentReference[oaicite:1]{index=1}  
+   - Muriate of Potash (MOP, potassium source) :contentReference[oaicite:2]{index=2}  
+   - Bio-fertilizers like Azolla, Blue-green algae, Azotobacter, Azospirillum, Phosphobacteria, Phosphate solubilizers, Mycorrhiza :contentReference[oaicite:3]{index=3}  
+
+   **Pesticides / Insecticides / Biological controls:**
+   - Chlorantraniliprole (for stem borer, leaf folder) :contentReference[oaicite:4]{index=4}  
+   - Emamectin Benzoate :contentReference[oaicite:5]{index=5}  
+   - Chlorpyrifos (pests like stem borer, leaf folder, whorl maggot) :contentReference[oaicite:6]{index=6}  
+   - Neem-based products / Neem oil or Neem cake for pest management and soil health :contentReference[oaicite:7]{index=7}  
+   - Pyraxalt™ active for planthopper control :contentReference[oaicite:8]{index=8}  
+
+7. When suggesting specific names (if asked), mention approximate dose/formulation or pest names if known, and note safety / regulation / waiting periods as relevant.
+
+`;
+
+    const initialPrompt = `
+${systemPrompt}
+Crop Data: ${JSON.stringify(formData)}
+Prediction: ${JSON.stringify(predictionData)}
+
+Now, produce:
+- A succinct yield prediction + assessment.
+- General suggestions (without naming specific fertilizers/pesticides unless the user asked).
+- Estimated % improvement if suggestions are followed.
+Ignore any “good yield” bias in prediction data; assess on merits.
+`;
+
     const initialResult = await model.generateContent(initialPrompt);
     const initialMessage = initialResult.response.text().trim();
 
