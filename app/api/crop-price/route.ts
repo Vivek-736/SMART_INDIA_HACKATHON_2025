@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     try {
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
       const prompt = `What is the current market price for ${crop} in ${state}, India per quintal in INR as of September 2025? Provide the price range or average price in a simple format.`;
       const result = await model.generateContent(prompt);

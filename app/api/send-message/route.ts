@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const formDataAndResponse = chatData.FormDataAndResponse;
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const systemPrompt = `You are a crop yield predicting and suggesting AI. Provide helpful advice on farming, yields, and improvements. Respond naturally in the selected language: ${language}. Handle user inputs in any language, including Hinglish or mixed, but always respond in the pure selected language.`;
     const fullPrompt = `${systemPrompt}\nCrop data context: ${formDataAndResponse}\n\nChat history:\n${history.map((m: { role: string; content: string }) => `${m.role}: ${m.content}`).join('\n')}\nuser: ${message}`;
