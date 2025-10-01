@@ -138,8 +138,8 @@ AgroGen/
 | Name | Role |
 |------|------|
 | Ashraf | AI Developer & Strategist |
-| Ram Charan | Full Stack & Mobile Developer |
-| Asish | Mobile Developer |
+| Ram Charan | Full Stack Developer |
+| Asish | Supporting Full Stack Developer |
 | Yashasvini | Researcher & Pitch Deck |
 | Harshitha | Researcher & Pitch Deck |
 | Malavya | Video Editor & Demo Creation |
