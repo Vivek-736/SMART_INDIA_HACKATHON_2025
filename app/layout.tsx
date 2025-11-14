@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import "./globals.css";
+import type { Metadata } from "next";
+import { Schibsted_Grotesk } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import Provider from "./Provider";
 
-const poppins = Poppins({
+const schibstedGrotesk = Schibsted_Grotesk({
+  variable: "--font-schibsted-grotesk",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default function RootLayout({
     >
       <html lang="en">
         <body
-          className={`${poppins.variable} antialiased`}
+          className={`${schibstedGrotesk.variable} antialiased`}
         >
           <Provider>
             {children}

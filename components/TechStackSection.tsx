@@ -12,16 +12,16 @@ const TechStackSection = () => {
   ];
 
   return (
-    <section id="tech-stack" className="py-16 bg-gray-900">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-800 rounded-full mb-4">
-            <span className="text-sm font-medium text-gray-300">Technology Stack</span>
+    <section id="tech-stack" className="py-24 bg-black/[0.02] border-t border-black/[0.06]">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-100 rounded-full mb-6">
+            <span className="text-sm font-medium text-green-700">Technology Stack</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-black mb-4 font-[family-name:var(--font-nohemi)]">
             Built with Modern Technology
           </h2>
-          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg text-black/60 max-w-2xl mx-auto">
             Scalable, modern, and production-ready tech stack powering AgroGen.
           </p>
         </div>
@@ -30,18 +30,18 @@ const TechStackSection = () => {
           {technologies.map((tech, index) => (
             <Card
               key={index}
-              className="border-0 shadow-sm hover:shadow-md transition-shadow duration-300 rounded-lg bg-gray-800/50 backdrop-blur-sm"
+              className="border border-black/[0.06] hover:border-green-200 transition-all duration-300 rounded-xl bg-white"
             >
               <CardHeader className="text-center pb-4 pt-6">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-lg bg-gray-700 flex items-center justify-center hover:bg-gray-600 transition-colors duration-300">
-                  <span className="text-xl font-bold text-green-400 hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 mx-auto mb-4 rounded-lg bg-green-50 flex items-center justify-center hover:bg-green-100 transition-colors duration-300">
+                  <span className="text-xl font-bold text-green-600 font-[family-name:var(--font-nohemi)]">
                     {tech.name.charAt(0)}
                   </span>
                 </div>
-                <CardTitle className="font-semibold text-white mb-1 hover:text-green-400 transition-colors duration-300">{tech.name}</CardTitle>
+                <CardTitle className="text-sm font-semibold text-black font-[family-name:var(--font-nohemi)]">{tech.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-400 text-center hover:text-gray-300 transition-colors duration-300">{tech.description}</p>
+                <p className="text-xs text-black/50 text-center">{tech.description}</p>
               </CardContent>
             </Card>
           ))}
